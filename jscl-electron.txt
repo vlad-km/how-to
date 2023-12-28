@@ -20,6 +20,8 @@
 
 5. Create an HTML file in the <youplace> directory with the name <any-name-html>.html and the following content:
 
+// begin
+
 <!doctype html>
 <html>
   <head>
@@ -39,10 +41,11 @@
   </body>
 </html>
 
+// end
 
 6. Create a JS file in the <youplace> directory with the name <any-name-js>.js and the following content:
 
-
+// begin
 const electron = require('electron')
 const app = electron.app
 const BrowserWindow = electron.BrowserWindow
@@ -82,6 +85,7 @@ app.on('activate', function () {
         createWindow()
     }
 })
+// end
 
 7. Create a JSON file in the <youplace> directory with the name <any-name-json>.json and the following content:
 
@@ -138,8 +142,6 @@ Note: fill in "dependencies" at your discretion
     (load "./<youplace>/fsm.lisp" :verbose nil)
     (launching)
 
-    
-
     OR
 
     (setq bin #())
@@ -152,10 +154,11 @@ Note: fill in "dependencies" at your discretion
      compilation with the following command:
      
     (require "./star-trek.js")
+    
     (launching)
 
 11. Do you need to have functions from HTML, CSS, FFI packages?
-     This is done like this:
+    This is done like this:
 
 
        (setq bin #())
