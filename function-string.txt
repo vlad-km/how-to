@@ -1,0 +1,76 @@
+                          Function (STRING arg)
+
+1. (string 'symbol) => "SYMBOL"
+   (type-of (string 'symbol)) => (STRING 6)
+
+   (string 1234) => "1234"
+   (char (string 1234) 0) => 1234
+   (length (string 1234)) => 1
+   (type-of (string 1234)) => (string 1)
+
+2. it's bug or feature?
+   In most cases this can be ignored.  if you have not encountered this nuance, then
+   this is not your case.
+
+3. Consider the case of string concatenation using the internal function JSCL::CONCAT.
+   In general it works correctly, that is:
+
+   (defun rand-id nil (aref #("one" "two" "more") (random 3)))
+   (jscl::concat "Prefix-" (rand-id) "-pad")
+       => "Prefix-one-pad"
+   (length *) => 15
+
+3.1 Now:
+   (defun rand-id nil (aref #(1234 56789 101112) (random 3)))
+
+   (jscl::concat "Prefix-" (rand-id) "-pad")
+   => "Prefix-56789-pad"
+   (length *) => 12  (expected 16)
+
+   (jscl::concat "Prefix-" (rand-id) "-pad")
+   => "Prefix-1234-pad"
+   (length *) => 12  (expected 15)
+   (char ** 7) => 1234 (expected #\1)
+
+   (jscl::concat "Prefix-" (rand-id) "-pad")
+   => "Prefix-101112-pad" 
+   (length *) => 12 (expected 17)
+   (char ** 7) => 101112
+
+4. To coerce a number to a string, we cannot use  function STRING
+   see p.1 above.
+
+5. Possible solutions are as follows:
+
+5.1 Redefine function STRING as:
+
+(defun !string (x)
+  (cond ((stringp x) x)
+        ((symbolp x) (symbol-name x))
+        ((characterp x) (make-string 1 :initial-element x))
+        ((numberp x) (ffi:call (x "toString")))
+        (t (make-string 1 :initial-element x))))
+
+   (jscl::concat "Prefix-" (!string (rand-id)) "-pad")
+   => "Prefix-56789-pad"
+   (length *) => 16
+   (char ** 7) => #\5
+
+5.2 Use #j:String:
+
+   (#j:String 12345)
+   => "12345"
+   (length *) => 5
+
+   (jscl::concat "Prefix-" (!string (rand-id)) "-pad")
+   => "Prefix-56789-pad"
+   (length *) => 16
+   (char ** 7) => #\5
+
+5.3 Use (ffi:call (12345 "toString"))
+    => "12345"
+    (length *) => 5
+
+
+Something like this
+
