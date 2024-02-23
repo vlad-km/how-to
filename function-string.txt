@@ -38,7 +38,24 @@
    (char ** 7) => 101112
 
 4. To coerce a number to a string, we cannot use  function STRING
-   see p.1 above.
+   (see p.1 above.)
+ 
+       Welcome to JSCL (version c03d583 built on 31 July 2023)
+
+       JSCL is a Common Lisp implementation on Javascript.
+       For more information, visit the project page at GitHub.
+
+       CL-USER> (jscl::concat (string 123) (string 1234))
+       "1231234"
+       CL-USER> (length *)
+       2
+       CL-USER> (describe **)
+       1231234
+       Class: #<builtin-in-class STRING>
+       Length: 2
+       0: 123
+       1: 1234
+   
 
 5. Possible solutions are as follows:
 
